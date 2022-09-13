@@ -2,19 +2,21 @@
 # import tkinter
 from tkinter import ttk
 import tkinter as tk
+from tkinter.messagebox import showinfo
 
-window = tk.Tk()
-window.title("Điểm danh khuôn mặt DEMO")
-window.geometry("800x600")
+
+root = tk.Tk()
+root.title("Điểm danh khuôn mặt DEMO")
+root.geometry("800x600")
 
 # Add lable
-lbel = tk.Label(window, text="Hello, world!", bg="white", fg='red',\
+lbel = tk.Label(root, text="Hello, world!", bg="white", fg='red',\
          font=('Arial', 50))
 lbel.grid(column=0, row=0, padx = 10, pady = 25)
 
 
 # Add Textbox
-txt = tk.Entry(window, width=20)
+txt = tk.Entry(root, width=20)
 txt.grid(column=0, row=1)
 
 def handleBtnHello():
@@ -22,15 +24,50 @@ def handleBtnHello():
     return
 
 # Add botton
-btnHello = tk.Button(window, text="Say Hello", command=handleBtnHello)
+btnHello = tk.Button(root, text="Say Hello", command=handleBtnHello)
 btnHello.grid(column=1, row=1)
 
 
-# Add Combobox
-n = tk.StringVar()
-name_nv_choosen = ttk.Combobox(window, width = 27, textvariable = n)
-name_nv_choosen['value'] = ("Nhân viên 1", "Nhân viên 2", "Nhân viên 3")
-name_nv_choosen.grid(column=0, row=2)
-name_nv_choosen.current()
 
-window.mainloop()
+
+# create the root window
+
+# create a list box
+langs = ('Java', 'C#', 'C', 'C++', 'Python',
+         'Go', 'JavaScript', 'PHP', 'Swift')
+
+var = tk.Variable(value=langs)
+
+listbox = tk.Listbox(
+    root,
+    listvariable=var,
+    height=6,
+    selectmode=tk.EXTENDED)
+
+listbox.grid(column=0, row=2)
+
+# link a scrollbar to a list
+scrollbar = ttk.Scrollbar(
+    root,
+    orient=tk.VERTICAL,
+    command=listbox.yview
+)
+
+# listbox['yscrollcommand'] = scrollbar.set
+
+# scrollbar.pack(side=tk.LEFT, expand=True, fill=tk.Y)
+
+
+def items_selected(event):
+    # get selected indices
+    selected_indices = listbox.curselection()
+    # get selected items
+    selected_langs = ",".join([listbox.get(i) for i in selected_indices])
+    msg = f'You selected: {selected_langs}'
+
+    showinfo(title='Information', message=msg)
+
+
+listbox.bind('<<ListboxSelect>>', items_selected)
+
+root.mainloop()
